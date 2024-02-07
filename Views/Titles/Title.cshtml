@@ -1,0 +1,67 @@
+﻿@using System.Security.Claims
+@model Title
+
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <h3 style="margin-top: 3%">@Model.Text</h3>
+        <div id = "entry_section">
+            <hr class="my-4">
+            <div>
+                @if(ViewBag.Page == 1 && User.Identity!.IsAuthenticated)
+                {
+                    <h4 class="mb-3">Leave an entry</h4>
+                    <form action="/Titles/AddEntry" method="post">
+                        <input type="hidden" name="TitleId" value="@Model.Id">
+                        <input type="hidden" name="Slug" value="@Model.Slug">
+                        <div class="col-md-12">
+                            <textarea type="text" name="Text" id="Text" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" style="margin-top: 3%">Add</button>
+                        </div>
+                    </form>
+                }
+                @if(ViewBag.Page == 1 && !User.Identity!.IsAuthenticated)
+                {
+                    <h4 class="mb-3">Log in to leave an entry</h4>
+                }
+            </div>
+            @if(ViewBag.Page == 1)
+            {
+                <h4 style="margin-top: 3%">There are @ViewBag.EntryCount entries</h4>
+            }
+            @foreach (var entry in Model.Entries)
+            {
+                <div class="my-4 d-flex" style="margin-top: 3%">
+                    <div>
+                        <div class="mb-2 d-flex">
+                            <h6 class="me-2"><a href="/profile/@entry.User.NickName">@entry.User.NickName</a></h6>
+                            <small>@entry.CreationTime.ToString()</small>
+                        </div>
+                        <p>@entry.Text</p>
+                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == entry.UserId.ToString() || User.FindFirstValue(ClaimTypes.Role) == "Admin")
+                        {
+                            <form action="/Titles/RemoveEntry" method="post">
+                                <input type="hidden" name="id" value="@entry.Id">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+            <nav class="pagination">
+                @if(ViewBag.Page > 1)
+                {
+                    <li class="page-item"><a href="/title/@Model.Slug/@(ViewBag.Page - 1)" class="page-link">PREV</a></li>
+                }
+                <li class="page-item"><a href="/title/@Model.Slug/@(ViewBag.Page)" class="page-link">@ViewBag.Page / @ViewBag.MaxPage</a></li>
+                @if(ViewBag.MaxPage != ViewBag.Page)
+                {
+                    <li class="page-item"><a href="/title/@Model.Slug/@(ViewBag.Page + 1)" class="page-link">NEXT</a></li>
+                }
+            </nav>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>

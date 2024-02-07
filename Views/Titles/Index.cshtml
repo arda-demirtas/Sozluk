@@ -1,0 +1,43 @@
+﻿@using System.Security.Claims
+@model List<Title>
+
+<div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+        <div style="width: 100%; margin-top: 3%">
+            @foreach(var item in Model)
+            {
+                <div class="row" style="margin-top: 3%">
+                <div class="col-8">
+                <a style="text-decoration: none;" href="/title/@item.Slug/1">
+                    <h5 class="border">@item.Text</h5>
+                </a>
+                </div>
+                <div class="col-4">
+                    @if(User.FindFirstValue(ClaimTypes.NameIdentifier) == item.UserId.ToString() || User.FindFirstValue(ClaimTypes.Role) == "Admin")
+                        {
+                            <form action="/Titles/RemoveTitle" method="post">
+                                <input type="hidden" name="id" value="@item.Id">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        }
+                </div>
+                </div>
+            }
+        </div>
+        <nav class="pagination">
+            @if (ViewBag.Page > 1)
+            {
+                <li class="page-item"><a href="/titles/index/@(ViewBag.Page - 1)" class="page-link">PREV</a></li>
+            }
+            <li class="page-item"><a href="/titles/index/@(ViewBag.Page)" class="page-link">@ViewBag.Page / @ViewBag.MaxPage</a></li>
+            @if (ViewBag.MaxPage != ViewBag.Page)
+            {
+                <li class="page-item"><a href="/titles/index/@(ViewBag.Page + 1)" class="page-link">NEXT</a></li>
+            }
+        </nav>
+    </div>
+    <div class="col-lg-3">
+        <vc:new-titles></vc:new-titles>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+﻿@model List<Title>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Latest Titles</h5>
+    </div>
+    <div class="card-body">
+        @foreach (var title in Model)
+        {
+            <div class="mb-3">
+                <h6 class="mb-8">
+                    <a href="/title/@title.Slug/1">@title.Text</a>
+                </h6>
+            </div>
+        }
+    </div>
+</div>

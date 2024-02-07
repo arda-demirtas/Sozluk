@@ -1,0 +1,22 @@
+﻿@model TitleCreateViewModel
+<div class="row">
+    <div class="col-12">
+        @if(User.Identity!.IsAuthenticated)
+        {
+            <h1>Add a Title</h1>
+            <form action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Text" class="form-label"></label>
+                    <input asp-for="Text" class="form-control">
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        }
+        else
+        {
+            <h1>Log in to create a title</h1>
+        }
+    </div>
+</div>
